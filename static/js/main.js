@@ -62,11 +62,11 @@ function initDashboard() {
     const ctxSeverity = document.getElementById("alertsSeverityChart");
     const ctxCategories = document.getElementById("eventCategoriesChart");
 
-    // Initialize System Health Gauges
-    const gaugeCPU = initGauge("cpuGaugeCanvas", "#0ea5e9");
-    const gaugeMem = initGauge("memoryGaugeCanvas", "#a855f7");
-    const gaugeDisk = initGauge("diskGaugeCanvas", "#f97316");
-    const gaugeConn = initGauge("connGaugeCanvas", "#22c55e", true);
+    // Initialize System Health Gauges (using a monochromatic red/crimson palette)
+    const gaugeCPU = initGauge("cpuGaugeCanvas", "#ef4444");
+    const gaugeMem = initGauge("memoryGaugeCanvas", "#e11d48");
+    const gaugeDisk = initGauge("diskGaugeCanvas", "#be123c");
+    const gaugeConn = initGauge("connGaugeCanvas", "#9f1239", true);
 
     window.gauges = {
         cpu: gaugeCPU,
@@ -85,8 +85,8 @@ function initDashboard() {
                     {
                         label: 'Total Events',
                         data: [],
-                        borderColor: '#0ea5e9',
-                        backgroundColor: 'rgba(14, 165, 233, 0.1)',
+                        borderColor: '#f43f5e',
+                        backgroundColor: 'rgba(244, 63, 94, 0.1)',
                         tension: 0.3,
                         fill: true
                     },
@@ -110,11 +110,11 @@ function initDashboard() {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: { labels: { color: '#94a3b8' } }
+                    legend: { labels: { color: '#e2caca' } }
                 },
                 scales: {
-                    x: { grid: { color: '#1e293b' }, ticks: { color: '#94a3b8' } },
-                    y: { grid: { color: '#1e293b' }, ticks: { color: '#94a3b8' } }
+                    x: { grid: { color: '#2e1414' }, ticks: { color: '#e2caca' } },
+                    y: { grid: { color: '#2e1414' }, ticks: { color: '#e2caca' } }
                 }
             }
         });
@@ -136,7 +136,7 @@ function initDashboard() {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: { position: 'right', labels: { color: '#94a3b8' } }
+                    legend: { position: 'right', labels: { color: '#e2caca' } }
                 },
                 cutout: '70%'
             }
@@ -152,7 +152,7 @@ function initDashboard() {
                 datasets: [{
                     label: 'Event Count',
                     data: [0, 0, 0, 0, 0, 0],
-                    backgroundColor: '#0ea5e9',
+                    backgroundColor: '#ef4444',
                     borderRadius: 4
                 }]
             },
@@ -164,8 +164,8 @@ function initDashboard() {
                     legend: { display: false }
                 },
                 scales: {
-                    x: { grid: { color: '#1e293b' }, ticks: { color: '#94a3b8' } },
-                    y: { grid: { color: 'transparent' }, ticks: { color: '#94a3b8' } }
+                    x: { grid: { color: '#2e1414' }, ticks: { color: '#e2caca' } },
+                    y: { grid: { color: 'transparent' }, ticks: { color: '#e2caca' } }
                 }
             }
         });
@@ -187,7 +187,7 @@ function initGauge(canvasId, color, isConnections = false) {
         data: {
             datasets: [{
                 data: [0, 100],
-                backgroundColor: [color, '#1e293b'],
+                backgroundColor: [color, '#2e1414'],
                 borderWidth: 0
             }]
         },

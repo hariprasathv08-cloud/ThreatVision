@@ -241,7 +241,8 @@ def settings():
         "gmail_sender": db.get_setting("gmail_sender", ""),
         "gmail_app_password": db.get_setting("gmail_app_password", ""),
         "gmail_recipients": db.get_setting("gmail_recipients", ""),
-        "fim_monitored_paths": db.get_setting("fim_monitored_paths", "")
+        "fim_monitored_paths": db.get_setting("fim_monitored_paths", ""),
+        "email_notifications_enabled": db.get_setting("email_notifications_enabled", "1")
     }
     return render_template("settings.html", settings=settings_data)
 
@@ -617,12 +618,14 @@ def update_settings():
     gmail_app_password = request.form.get("gmail_app_password", "")
     gmail_recipients = request.form.get("gmail_recipients", "").strip()
     fim_paths = request.form.get("fim_monitored_paths", "").strip()
+    email_notifications_enabled = request.form.get("email_notifications_enabled", "0")
     
     db.set_setting("gmail_sender", gmail_sender)
     if gmail_app_password:  # Only update if password input is filled
         db.set_setting("gmail_app_password", gmail_app_password)
     db.set_setting("gmail_recipients", gmail_recipients)
     db.set_setting("fim_monitored_paths", fim_paths)
+    db.set_setting("email_notifications_enabled", email_notifications_enabled)
     
     flash("Settings updated successfully.", "success")
     return redirect(url_for("settings"))

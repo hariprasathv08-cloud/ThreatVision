@@ -67,6 +67,11 @@ def notify_alert(alert):
     Format and send an alert notification email.
     alert is a dict or sqlite3.Row containing details about the alert.
     """
+    db = Database()
+    if db.get_setting("email_notifications_enabled", "1") == "0":
+        logger.info("Email notifications are disabled by user configuration. Skipping alert email.")
+        return False
+
     subject = f"[CyberSIEM Alert] [{alert['severity'].upper()}] - {alert['source']}"
     
     severity_color = {
