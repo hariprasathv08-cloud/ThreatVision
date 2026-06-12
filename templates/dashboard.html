@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+
+{% block page_title %}Dashboard Home{% endblock %}
+
+{% block content %}
+<!-- Metrics Cards Grid -->
+<div class="metrics-grid">
+    <a href="/events" class="metric-card events text-decoration-none text-white">
+        <div class="card-icon-wrapper"><i class="fas fa-list-check"></i></div>
+        <div class="card-title">Total Security Events</div>
+        <div class="card-value" id="stat-total-events">{{ stats.total_events }}</div>
+        <div class="card-trend text-success"><i class="fas fa-caret-up"></i> Live Feed Active</div>
+    </a>
+    
+    <a href="/alerts?severity=Critical" class="metric-card critical text-decoration-none text-white">
+        <div class="card-icon-wrapper"><i class="fas fa-radiation"></i></div>
+        <div class="card-title">Critical Alerts</div>
+        <div class="card-value" id="stat-critical">{{ stats.critical_alerts }}</div>
+        <div class="card-trend text-danger"><i class="fas fa-bell"></i> Immediate attention</div>
+    </a>
+    
+    <a href="/alerts?severity=High" class="metric-card high text-decoration-none text-white">
+        <div class="card-icon-wrapper"><i class="fas fa-fire-flame-curved"></i></div>
+        <div class="card-title">High Alerts</div>
+        <div class="card-value" id="stat-high">{{ stats.high_alerts }}</div>
+        <div class="card-trend text-warning"><i class="fas fa-triangle-exclamation"></i> Response required</div>
+    </a>
+    
+    <a href="/alerts?severity=Medium" class="metric-card medium text-decoration-none text-white">
+        <div class="card-icon-wrapper"><i class="fas fa-circle-exclamation"></i></div>
+        <div class="card-title">Medium Alerts</div>
+        <div class="card-value" id="stat-medium">{{ stats.medium_alerts }}</div>
+        <div class="card-trend text-secondary"><i class="fas fa-clock"></i> Queue checks</div>
+    </a>
+    
+    <a href="/alerts?severity=Low" class="metric-card low text-decoration-none text-white">
+        <div class="card-icon-wrapper"><i class="fas fa-circle-info"></i></div>
+        <div class="card-title">Low Alerts</div>
+        <div class="card-value" id="stat-low">{{ stats.low_alerts }}</div>
+        <div class="card-trend text-success"><i class="fas fa-check-double"></i> Audits clean</div>
+    </a>
+    
+    <a href="/users" class="metric-card active-users text-decoration-none text-white">
+        <div class="card-icon-wrapper"><i class="fas fa-users-gear"></i></div>
+        <div class="card-title">Active Users</div>
+        <div class="card-value" id="stat-active-users">{{ stats.active_users }}</div>
+        <div class="card-trend text-info"><i class="fas fa-key"></i> Connected console</div>
+    </a>
+</div>
+
+<!-- Main Panels Layout -->
+<div class="dashboard-grid">
+    
+    <!-- 1. System Health Radial Gauges -->
+    <div class="soc-panel">
+        <div class="panel-header">
+            <span class="panel-title"><i class="fas fa-heartbeat text-danger mr-2"></i> System Health Metrics</span>
+        </div>
+        <div class="health-charts-container">
+            <div class="health-gauge-box">
+                <span class="health-gauge-title">CPU Usage</span>
+                <div class="gauge-canvas-wrapper">
+                    <canvas id="cpuGaugeCanvas"></canvas>
+                    <div class="gauge-text-overlay" id="cpu-gauge-text">--%</div>
+                </div>
+            </div>
+            <div class="health-gauge-box">
+                <span class="health-gauge-title">Memory Usage</span>
+                <div class="gauge-canvas-wrapper">
+                    <canvas id="memoryGaugeCanvas"></canvas>
+                    <div class="gauge-text-overlay" id="mem-gauge-text">--%</div>
+                </div>
+            </div>
+            <div class="health-gauge-box">
+                <span class="health-gauge-title">Disk Space</span>
+                <div class="gauge-canvas-wrapper">
+                    <canvas id="diskGaugeCanvas"></canvas>
+                    <div class="gauge-text-overlay" id="disk-gauge-text">--%</div>
+                </div>
+            </div>
+            <div class="health-gauge-box">
+                <span class="health-gauge-title">Active Connections</span>
+                <div class="gauge-canvas-wrapper">
+                    <canvas id="connGaugeCanvas"></canvas>
+                    <div class="gauge-text-overlay" id="conn-gauge-text">--</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 2. Security Events Over Time -->
+    <div class="soc-panel">
+        <div class="panel-header">
+            <span class="panel-title"><i class="fas fa-chart-line text-info mr-2"></i> Security Event Trends</span>
+            <div class="live-time" style="font-size: 11px;"><i class="fas fa-circle-play text-success"></i> Real-time updates</div>
+        </div>
+        <div style="height: 180px; position: relative;">
+            <canvas id="eventsOverTimeChart"></canvas>
+        </div>
+    </div>
+    
+    <!-- 3. Severity Distribution Donut -->
+    <div class="soc-panel">
+        <div class="panel-header">
+            <span class="panel-title"><i class="fas fa-pie-chart text-warning mr-2"></i> Alerts by Severity</span>
+        </div>
+        <div style="height: 180px; position: relative;">
+            <canvas id="alertsSeverityChart"></canvas>
+        </div>
+    </div>
+    
+    <!-- 4. Top Event Categories Bar -->
+    <div class="soc-panel">
+        <div class="panel-header">
+            <span class="panel-title"><i class="fas fa-chart-bar text-primary mr-2"></i> Top Event Categories</span>
+        </div>
+        <div style="height: 180px; position: relative;">
+            <canvas id="eventCategoriesChart"></canvas>
+        </div>
+    </div>
+    
+    <!-- 5. Recent Critical Alerts -->
+    <div class="soc-panel grid-span-2">
+        <div class="panel-header">
+            <span class="panel-title"><i class="fas fa-fire text-danger mr-2"></i> Recent Critical & High Alerts</span>
+            <a href="{{ url_for('alerts') }}" class="btn btn-sm btn-siem-secondary py-1 text-white">View All Alerts</a>
+        </div>
+        <div class="siem-table-container">
+            <table class="siem-table sortable">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Severity</th>
+                        <th>Source</th>
+                        <th>Alert Details</th>
+                        <th>MITRE ATT&CK</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="recent-alerts-table-body">
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">Retrieving alerts feeds...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- 6. Live Windows Event Logs -->
+    <div class="soc-panel grid-span-2">
+        <div class="panel-header">
+            <span class="panel-title"><i class="fas fa-server text-info mr-2"></i> Live Windows Event Logs</span>
+            <a href="{{ url_for('events') }}" class="btn btn-sm btn-siem-secondary py-1 text-white">Advanced Search</a>
+        </div>
+        <div class="siem-table-container">
+            <table class="siem-table sortable">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Event ID</th>
+                        <th>Level</th>
+                        <th>Source</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody id="live-events-table-body">
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">Awaiting security logs...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 7. System Info Panel -->
+    <div class="soc-panel">
+        <div class="panel-header">
+            <span class="panel-title"><i class="fas fa-circle-info text-secondary mr-2"></i> Host Configuration Information</span>
+        </div>
+        <table class="siem-table">
+            <tbody>
+                <tr>
+                    <td class="text-secondary" style="width: 40%;">Hostname:</td>
+                    <td><strong>{{ system_info.hostname }}</strong></td>
+                </tr>
+                <tr>
+                    <td class="text-secondary">OS Platform:</td>
+                    <td>{{ system_info.os }}</td>
+                </tr>
+                <tr>
+                    <td class="text-secondary">System Uptime:</td>
+                    <td>{{ system_info.uptime }}</td>
+                </tr>
+                <tr>
+                    <td class="text-secondary">Logged In Operator:</td>
+                    <td>{{ system_info.logged_user }}</td>
+                </tr>
+                <tr>
+                    <td class="text-secondary">IPv4 Host Address:</td>
+                    <td>{{ system_info.ip_address }}</td>
+                </tr>
+                <tr>
+                    <td class="text-secondary">.NET Framework:</td>
+                    <td>{{ system_info.dotnet_framework }}</td>
+                </tr>
+                <tr>
+                    <td class="text-secondary">Python Version:</td>
+                    <td>{{ system_info.python_version }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 8. CyberSIEM Logo Shield -->
+    <div class="soc-panel">
+        <div class="system-branding-box">
+            <div class="branding-shield">
+                <i class="fas fa-shield-halved"></i>
+            </div>
+            <h4 class="mb-1" style="font-family: 'Outfit', sans-serif; font-weight: 700;">CyberSIEM Protection</h4>
+            <p class="text-muted small px-3">
+                Host Intrusion Detection, Real-time Windows Event Parsing, Network Sockets Auditing, File Integrity Watchdog and Automated Event Threat Correlation Engine active.
+            </p>
+            {% if last_login %}
+            <div class="mt-3 text-secondary small" style="font-size: 11px;">
+                <i class="fas fa-user-clock text-info"></i> Last successful login: <strong>{{ last_login.timestamp }}</strong> from <strong>{{ last_login.ip_address }}</strong>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

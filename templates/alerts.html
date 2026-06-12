@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block page_title %}Alerts Resolution Center{% endblock %}
+
+{% block content %}
+<div class="soc-panel">
+    <div class="panel-header">
+        <span class="panel-title"><i class="fas fa-filter text-warning mr-2"></i> Filter Alerts</span>
+    </div>
+    
+    <div class="row g-3">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="alert-severity-filter">Severity Level</label>
+                <select id="alert-severity-filter" class="form-control">
+                    <option value="">All Severities</option>
+                    <option value="Critical">Critical</option>
+                    <option value="High">High</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Low">Low</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="alert-status-filter">Investigation Status</label>
+                <select id="alert-status-filter" class="form-control">
+                    <option value="">All Statuses</option>
+                    <option value="Open">Open</option>
+                    <option value="Investigating">Investigating</option>
+                    <option value="Resolved">Resolved</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="soc-panel">
+    <div class="panel-header">
+        <span class="panel-title"><i class="fas fa-radiation text-danger mr-2"></i> Triggered Alerts List</span>
+        <div class="text-secondary small">Real-time alerts status sync</div>
+    </div>
+    
+    <div class="siem-table-container">
+        <table class="siem-table sortable">
+            <thead>
+                <tr>
+                    <th style="width: 5%;">ID</th>
+                    <th style="width: 15%;">Timestamp</th>
+                    <th style="width: 10%;">Severity</th>
+                    <th style="width: 15%;">Source</th>
+                    <th style="width: 20%;">Alert Description</th>
+                    <th style="width: 15%;">MITRE ATT&CK</th>
+                    <th style="width: 15%;">Recommended Action</th>
+                    <th style="width: 10%;">Status</th>
+                </tr>
+            </thead>
+            <tbody id="alerts-table-body">
+                <tr>
+                    <td colspan="7" class="text-center text-muted">Awaiting alert signals...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block page_title %}Network Interface Connections Monitor{% endblock %}
+
+{% block content %}
+<div class="soc-panel">
+    <div class="panel-header">
+        <span class="panel-title"><i class="fas fa-network-wired text-info mr-2"></i> Active Network Sockets snapshot</span>
+        <span class="text-secondary small">Auto-refreshing</span>
+    </div>
+    
+    <div class="siem-table-container">
+        <table class="siem-table sortable">
+            <thead>
+                <tr>
+                    <th style="width: 15%;">Logged Time</th>
+                    <th style="width: 10%;">Protocol</th>
+                    <th style="width: 25%;">Local EndPoint</th>
+                    <th style="width: 25%;">Remote Address (Target IP)</th>
+                    <th style="width: 25%;">Socket Status</th>
+                </tr>
+            </thead>
+            <tbody id="network-table-body">
+                <tr>
+                    <td colspan="5" class="text-center text-muted">Awaiting network interface socket logs...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

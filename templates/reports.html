@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block page_title %}Reports Operations Center{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <!-- Generate reports triggers -->
+    <div class="col-md-5">
+        <div class="soc-panel h-100">
+            <div class="panel-header">
+                <span class="panel-title"><i class="fas fa-plus text-primary mr-2"></i> Compile New Security Summary</span>
+            </div>
+            
+            <form action="{{ url_for('generate_report') }}" method="POST" class="siem-form mt-2">
+                <div class="form-group">
+                    <label for="report_type">Report Timeframe Scope</label>
+                    <select id="report_type" name="report_type" class="form-control">
+                        <option value="Daily">Daily Summary (Last 24 Hours)</option>
+                        <option value="Weekly">Weekly Summary (Last 7 Days)</option>
+                        <option value="Monthly">Monthly Audit (Last 30 Days)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="report_format">Compilation Format</label>
+                    <select id="report_format" name="report_format" class="form-control">
+                        <option value="PDF">Adobe PDF Document (.pdf)</option>
+                        <option value="CSV">Comma Separated Values (.csv)</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn-siem mt-3 py-2 w-100"><i class="fas fa-file-export"></i> Compile and Export Report</button>
+            </form>
+            
+            <p class="text-muted small mt-4">
+                Reports automatically bundle incident tallies, firewall states, login failures, FIM alerts, USB connection trails, and detailed security hardening playbooks.
+            </p>
+        </div>
+    </div>
+    
+    <!-- Generated reports history list -->
+    <div class="col-md-7">
+        <div class="soc-panel h-100">
+            <div class="panel-header">
+                <span class="panel-title"><i class="fas fa-file-pdf text-info mr-2"></i> Report Archive History</span>
+            </div>
+            
+            <div class="siem-table-container">
+                <table class="siem-table sortable">
+                    <thead>
+                        <tr>
+                            <th>Generated Time</th>
+                            <th>Report Type</th>
+                            <th>Format</th>
+                            <th>Download Link</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if reports %}
+                            {% for r in reports %}
+                            <tr>
+                                <td>{{ r.generated_at }}</td>
+                                <td><strong>{{ r.report_type }} Summary</strong></td>
+                                <td><span class="badge-level info">{{ r.format }}</span></td>
+                                <td>
+                                    <!-- Use filename utility -->
+                                    <a href="{{ url_for('static', filename='reports/' + r.filepath|basename) }}" download class="btn btn-sm btn-siem py-1 px-2">
+                                        <i class="fas fa-download"></i> Download
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else: %}
+                            <tr>
+                                <td colspan="4" class="text-center text-muted">No security reports have been compiled yet.</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

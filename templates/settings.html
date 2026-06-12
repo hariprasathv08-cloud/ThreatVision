@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block page_title %}CyberSIEM Security Console Settings{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <!-- Gmail configuration settings -->
+    <div class="col-md-6">
+        <div class="soc-panel h-100">
+            <div class="panel-header">
+                <span class="panel-title"><i class="fas fa-envelope text-warning mr-2"></i> Gmail SMTP Alert Configuration</span>
+            </div>
+            
+            <form action="{{ url_for('update_settings') }}" method="POST" class="siem-form mt-2">
+                <div class="form-group">
+                    <label for="gmail_sender">Gmail Sender Address</label>
+                    <input type="email" id="gmail_sender" name="gmail_sender" class="form-control" value="{{ settings.gmail_sender }}" placeholder="e.g. alert-sender@gmail.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="gmail_app_password">Gmail App Password</label>
+                    <input type="password" id="gmail_app_password" name="gmail_app_password" class="form-control" placeholder="•••• •••• •••• ••••">
+                    <span class="text-muted small" style="font-size: 11px;">
+                        <i class="fas fa-circle-question"></i> To send alerts, generate an <strong>App Password</strong> in your Google Account. Standard password login is not supported by Google.
+                    </span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="gmail_recipients">Recipient Address(es)</label>
+                    <input type="text" id="gmail_recipients" name="gmail_recipients" class="form-control" value="{{ settings.gmail_recipients }}" placeholder="operator1@org.com, security-ops@org.com">
+                    <span class="text-muted small" style="font-size: 11px;">
+                        Use comma-separated addresses for multiple operators.
+                    </span>
+                </div>
+                
+                <hr class="border-secondary mt-4">
+                
+                <!-- Monitored paths list -->
+                <div class="panel-header border-0 pb-0 mb-1">
+                    <span class="panel-title" style="font-size: 14px;"><i class="fas fa-folder-open text-primary mr-2"></i> FIM Watched Directory Paths</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="fim_monitored_paths">Monitored Folders</label>
+                    <input type="text" id="fim_monitored_paths" name="fim_monitored_paths" class="form-control" value="{{ settings.fim_monitored_paths }}" placeholder="C:\path1\monitored, C:\path2\monitored">
+                    <span class="text-muted small" style="font-size: 11px;">
+                        Use comma-separated absolute directory paths. Folders will be auto-created if missing.
+                    </span>
+                </div>
+                
+                <button type="submit" class="btn-siem mt-4 py-2 w-100"><i class="fas fa-save"></i> Save Operational Settings</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Hardening guidelines panel -->
+    <div class="col-md-6">
+        <div class="soc-panel h-100">
+            <div class="panel-header">
+                <span class="panel-title"><i class="fas fa-lock text-info mr-2"></i> Console Security & Setup Instructions</span>
+            </div>
+            
+            <div class="system-branding-box border-0 p-0 text-start mt-2">
+                <h5 class="mb-2" style="font-family: 'Outfit', sans-serif; font-weight: 600;">Gmail Integration Setup</h5>
+                <ol class="small text-muted mb-4 pl-3" style="padding-left: 20px;">
+                    <li>Log in to your Sender Gmail Account.</li>
+                    <li>Navigate to Google Account -> Security.</li>
+                    <li>Enable **2-Step Verification** (required for app passwords).</li>
+                    <li>Search for **App Passwords** or navigate under "Signing in to Google".</li>
+                    <li>Generate a new app password (select App: "Mail", Device: "Windows Computer" or "Other").</li>
+                    <li>Copy the 16-character code and paste it into the **Gmail App Password** input.</li>
+                </ol>
+                
+                <h5 class="mb-2" style="font-family: 'Outfit', sans-serif; font-weight: 600;">Monitored directories (FIM)</h5>
+                <p class="text-muted small mb-4">
+                    Ensure directories configured under FIM path lists have correct Windows DACLs (NTFS permissions). Restrict modification accesses to trusted system users only. Watchdog FIM handles recursive modifications.
+                </p>
+                
+                <h5 class="mb-2" style="font-family: 'Outfit', sans-serif; font-weight: 600;">Session management guidelines</h5>
+                <p class="text-muted small">
+                    Sessions expire after **2 hours** of idle states automatically. Always log out of the operator console when leaving workstation desks. Access events are audited in the User Management log tab.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

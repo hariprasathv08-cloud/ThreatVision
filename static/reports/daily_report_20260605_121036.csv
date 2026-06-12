@@ -1,0 +1,17 @@
+Report Name,Daily Security Summary
+Timeframe,2026-06-04 00:00:00 to 2026-06-05 12:10:36
+Generated At,2026-06-05 12:10:36
+
+ALERT LOGS
+Alert ID,Timestamp,Severity,Source Component,Details / Rule Match,Status
+1,2026-06-05 06:40:36,Critical,Correlation Engine,Brute Force Attack Detected: 6 failed logins in the last 5 minutes.,Open
+2,2026-06-05 06:40:36,Critical,Correlation Engine,Log Tampering Detected: Windows Security Audit Log was cleared (Event ID 1102).,Open
+
+USB DISK LOGS
+Device Name,Vendor,Action Type,Timestamp
+
+FILE INTEGRITY MONITORING LOGS
+File Path,Modification Type,Details,Timestamp
+
+FIREWALL CHANGES LOGS
+Action Taken,Details,Timestamp

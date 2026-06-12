@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block page_title %}Security Operator & Console User Manager{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <!-- User management operations -->
+    <div class="col-md-5">
+        <!-- Add user form -->
+        <div class="soc-panel">
+            <div class="panel-header">
+                <span class="panel-title"><i class="fas fa-user-plus text-primary mr-2"></i> Register New Operator</span>
+            </div>
+            
+            <form action="{{ url_for('add_user') }}" method="POST" class="siem-form mt-2">
+                <div class="form-group">
+                    <label for="username">Operator Name</label>
+                    <input type="text" id="username" name="username" class="form-control" placeholder="e.g. operator_smith" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Access Password</label>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="role">Assigned Authorization Role</label>
+                    <select id="role" name="role" class="form-control">
+                        <option value="Operator">Console Operator</option>
+                        <option value="Administrator">SOC Administrator</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn-siem mt-3 py-2 w-100"><i class="fas fa-user-shield"></i> Authorize Operator</button>
+            </form>
+        </div>
+        
+        <!-- Active operators list -->
+        <div class="soc-panel mt-4">
+            <div class="panel-header">
+                <span class="panel-title"><i class="fas fa-users-gear text-info mr-2"></i> Authorized Operator Consoles</span>
+            </div>
+            
+            <div class="siem-table-container">
+                <table class="siem-table">
+                    <thead>
+                        <tr>
+                            <th>Operator ID</th>
+                            <th>Username</th>
+                            <th>Role</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for u in users %}
+                        <tr>
+                            <td>{{ u.id }}</td>
+                            <td><strong>{{ u.username }}</strong></td>
+                            <td><span class="badge-level info">{{ u.role }}</span></td>
+                            <td>
+                                {% if u.id != current_user.id %}
+                                <form action="{{ url_for('delete_user', user_id=u.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to revoke authorization for user {{ u.username }}?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger border-0"><i class="fas fa-user-xmark"></i> Revoke</button>
+                                </form>
+                                {% else %}
+                                <span class="text-muted small">Active User</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Login history audit list -->
+    <div class="col-md-7">
+        <div class="soc-panel h-100">
+            <div class="panel-header">
+                <span class="panel-title"><i class="fas fa-history text-secondary mr-2"></i> Console Login Audit Trail</span>
+                <span class="text-secondary small">Last 50 entries</span>
+            </div>
+            
+            <div class="siem-table-container">
+                <table class="siem-table sortable">
+                    <thead>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>Username</th>
+                            <th>Source IP</th>
+                            <th>Status</th>
+                            <th>Action Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for log in history %}
+                        <tr>
+                            <td>{{ log.timestamp }}</td>
+                            <td><strong>{{ log.username }}</strong></td>
+                            <td>{{ log.ip_address }}</td>
+                            <td>
+                                <span class="badge-level {% if log.status == 'Success' %}low{% elif log.status == 'Failed' %}critical{% else %}info{% endif %}">
+                                    {{ log.status }}
+                                </span>
+                            </td>
+                            <td class="text-muted small">{{ log.details }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

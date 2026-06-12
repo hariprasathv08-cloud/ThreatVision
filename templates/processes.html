@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block page_title %}Active Host Process Manager{% endblock %}
+
+{% block content %}
+<div class="soc-panel">
+    <div class="panel-header">
+        <span class="panel-title"><i class="fas fa-microchip text-primary mr-2"></i> Host Processes list</span>
+        <div class="text-secondary small">Auto-refreshing | Sorted by CPU usage</div>
+    </div>
+    
+    <div class="siem-table-container">
+        <table class="siem-table sortable">
+            <thead>
+                <tr>
+                    <th style="width: 8%;">PID</th>
+                    <th style="width: 18%;">Name</th>
+                    <th style="width: 12%;">User</th>
+                    <th style="width: 8%;">CPU</th>
+                    <th style="width: 8%;">Memory</th>
+                    <th style="width: 34%;">Command Line / Exe Path</th>
+                    <th style="width: 12%;">Action</th>
+                </tr>
+            </thead>
+            <tbody id="processes-table-body">
+                <tr>
+                    <td colspan="7" class="text-center text-muted">Polling running process table...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

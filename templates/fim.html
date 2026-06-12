@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block page_title %}File Integrity Monitoring (FIM){% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <!-- Watchdog Configuration info -->
+    <div class="col-md-4">
+        <div class="soc-panel h-100">
+            <div class="panel-header">
+                <span class="panel-title"><i class="fas fa-eye text-warning mr-2"></i> Monitored Targets</span>
+            </div>
+            
+            <div class="mb-3">
+                <label class="text-secondary small font-weight-bold uppercase">Active Path Lists</label>
+                <div class="bg-secondary p-3 rounded border border-secondary text-truncate mt-2" title="{{ monitored_paths }}">
+                    <code>{{ monitored_paths or 'No paths defined yet.' }}</code>
+                </div>
+            </div>
+            
+            <p class="text-muted small">
+                Watchdog background monitor checks directories for additions, deletions, renames, and modifications. Changes trigger automated medium and high alert queues.
+            </p>
+            
+            <div class="mt-4">
+                <a href="{{ url_for('settings') }}" class="btn-siem w-100"><i class="fas fa-edit"></i> Edit Watched Folders</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- File Events log -->
+    <div class="col-md-8">
+        <div class="soc-panel h-100">
+            <div class="panel-header">
+                <span class="panel-title"><i class="fas fa-history text-info mr-2"></i> Integrity Violation Log</span>
+                <span class="text-secondary small">Auto-refreshing</span>
+            </div>
+            
+            <div class="siem-table-container">
+                <table class="siem-table sortable">
+                    <thead>
+                        <tr>
+                            <th style="width: 25%;">Timestamp</th>
+                            <th style="width: 30%;">File Name</th>
+                            <th style="width: 15%;">Event Type</th>
+                            <th style="width: 30%;">Details / Path</th>
+                        </tr>
+                    </thead>
+                    <tbody id="fim-table-body">
+                        <tr>
+                            <td colspan="4" class="text-center text-muted">Awaiting file modifications log...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

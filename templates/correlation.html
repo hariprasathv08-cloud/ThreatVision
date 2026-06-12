@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block page_title %}Event Correlation Engine{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <!-- Active Correlation Rules -->
+    <div class="col-lg-6">
+        <div class="soc-panel h-100">
+            <div class="panel-header">
+                <span class="panel-title"><i class="fas fa-microchip text-primary mr-2"></i> Active Correlation Rules</span>
+            </div>
+            
+            <div class="siem-table-container">
+                <table class="siem-table">
+                    <thead>
+                        <tr>
+                            <th>Rule Name</th>
+                            <th>Detection Condition</th>
+                            <th>Severity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for rule in rules %}
+                        <tr>
+                            <td><strong>{{ rule.name }}</strong></td>
+                            <td>{{ rule.condition }}</td>
+                            <td>
+                                <span class="badge-level {{ rule.severity.lower() }}">{{ rule.severity }}</span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Rule Match Recommendation Information -->
+    <div class="col-lg-6">
+        <div class="soc-panel h-100">
+            <div class="panel-header">
+                <span class="panel-title"><i class="fas fa-gears text-info mr-2"></i> Correlation Logic Flow</span>
+            </div>
+            
+            <div class="system-branding-box">
+                <div class="branding-shield" style="font-size: 48px; padding: 15px;">
+                    <i class="fas fa-network-wired text-info"></i>
+                </div>
+                <h5 class="mb-2" style="font-family: 'Outfit', sans-serif; font-weight: 600;">Real-Time Threat Matching</h5>
+                <p class="text-muted small mb-3">
+                    The correlation engine analyzes database records in real-time. When incoming log streams match defined heuristic rules, it automatically records alerts, updates counts, and pushes high/critical incidents immediately to administrators via Gmail SMTP.
+                </p>
+                <div class="w-100 text-start mt-3">
+                    <div class="small text-secondary mb-1"><strong>Action Playbook:</strong></div>
+                    <div class="small text-muted mb-1">• Enforce Account Lockout on Brute Force indicators</div>
+                    <div class="small text-muted mb-1">• Isolate systems undergoing suspicious spikes</div>
+                    <div class="small text-muted">• Verify audit permissions on clearing events</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

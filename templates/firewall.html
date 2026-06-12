@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block page_title %}Windows Defender Firewall Status{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <!-- Profile States -->
+    <div class="col-md-4">
+        <div class="soc-panel h-100">
+            <div class="panel-header">
+                <span class="panel-title"><i class="fas fa-shield-halved text-primary mr-2"></i> Firewall Profiles</span>
+            </div>
+            
+            <div class="d-flex flex-column gap-3 mt-3">
+                <div class="d-flex justify-content-between align-items-center bg-secondary p-3 rounded border border-secondary">
+                    <span class="font-weight-bold">Domain Profile:</span>
+                    <span id="fw-domain-badge" class="badge-level info">Checking...</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center bg-secondary p-3 rounded border border-secondary">
+                    <span class="font-weight-bold">Private Profile:</span>
+                    <span id="fw-private-badge" class="badge-level info">Checking...</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center bg-secondary p-3 rounded border border-secondary">
+                    <span class="font-weight-bold">Public Profile:</span>
+                    <span id="fw-public-badge" class="badge-level info">Checking...</span>
+                </div>
+            </div>
+            
+            <p class="text-muted small mt-4">
+                Profiles represent the connection state of the host. If any profile transitions to OFF, a critical event alert is immediately issued.
+            </p>
+        </div>
+    </div>
+    
+    <!-- Firewall changes log -->
+    <div class="col-md-8">
+        <div class="soc-panel h-100">
+            <div class="panel-header">
+                <span class="panel-title"><i class="fas fa-history text-info mr-2"></i> Rule & Profile Change Audit Logs</span>
+                <span class="text-secondary small">Auto-refreshing</span>
+            </div>
+            
+            <div class="siem-table-container">
+                <table class="siem-table sortable">
+                    <thead>
+                        <tr>
+                            <th style="width: 25%;">Timestamp</th>
+                            <th style="width: 20%;">Action Taken</th>
+                            <th style="width: 55%;">Modification Details</th>
+                        </tr>
+                    </thead>
+                    <tbody id="firewall-events-body">
+                        <tr>
+                            <td colspan="3" class="text-center text-muted">Awaiting firewall log feeds...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="soc-panel mt-4">
+    <div class="panel-header d-flex justify-content-between align-items-center">
+        <span class="panel-title"><i class="fas fa-search text-success mr-2"></i> Local Subnet Discovery Scanner</span>
+        <button id="btn-start-scan" class="btn btn-sm btn-siem-secondary text-white py-1 px-3" onclick="triggerNetworkScan()">
+            <i class="fas fa-network-wired"></i> Scan Local Network
+        </button>
+    </div>
+    
+    <div id="scan-loading-message" class="text-center py-4 d-none">
+        <div class="spinner-border text-info" role="status">
+            <span class="visually-hidden">Scanning...</span>
+        </div>
+        <p class="mt-2 text-info small">Actively pinging local network interfaces to discover online hosts... Please wait.</p>
+    </div>
+    
+    <div id="scanner-table-container" class="siem-table-container">
+        <table class="siem-table sortable">
+            <thead>
+                <tr>
+                    <th style="width: 25%;">IP Address</th>
+                    <th style="width: 25%;">MAC Physical Address</th>
+                    <th style="width: 20%;">Type</th>
+                    <th style="width: 30%;">Hostname</th>
+                </tr>
+            </thead>
+            <tbody id="network-scanner-body">
+                <tr>
+                    <td colspan="4" class="text-center text-muted">Click the button above to run an active discovery scan of the local subnet.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

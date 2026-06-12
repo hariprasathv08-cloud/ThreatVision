@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block page_title %}Security Events Log Browser{% endblock %}
+
+{% block content %}
+<div class="soc-panel">
+    <div class="panel-header">
+        <span class="panel-title"><i class="fas fa-list-check text-info mr-2"></i> Operational Logs Filter</span>
+    </div>
+    
+    <div class="row g-3">
+        <div class="col-md-8">
+            <div class="form-group">
+                <label for="event-search">Search Logs</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-secondary border-secondary text-secondary"><i class="fas fa-search"></i></span>
+                    <input type="text" id="event-search" class="form-control" placeholder="Search by Message content, Source, or Event ID...">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="event-level-filter">Severity Level</label>
+                <select id="event-level-filter" class="form-control">
+                    <option value="">All Levels</option>
+                    <option value="Information">Information</option>
+                    <option value="Warning">Warning</option>
+                    <option value="Error">Error</option>
+                    <option value="Audit Success">Audit Success</option>
+                    <option value="Audit Failure">Audit Failure</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="soc-panel">
+    <div class="panel-header">
+        <span class="panel-title"><i class="fas fa-shield text-info mr-2"></i> Gathered Windows Logs Feed</span>
+        <div class="text-secondary small">Showing last 100 entries</div>
+    </div>
+    
+    <div class="siem-table-container">
+        <table class="siem-table sortable">
+            <thead>
+                <tr>
+                    <th style="width: 8%;">ID</th>
+                    <th style="width: 18%;">Timestamp</th>
+                    <th style="width: 10%;">Event ID</th>
+                    <th style="width: 12%;">Level</th>
+                    <th style="width: 18%;">Source</th>
+                    <th style="width: 34%;">Message Details</th>
+                </tr>
+            </thead>
+            <tbody id="events-table-body">
+                <tr>
+                    <td colspan="6" class="text-center text-muted">Polling database events...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

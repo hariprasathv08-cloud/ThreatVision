@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block page_title %}USB Endpoint Monitoring{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <!-- Active USB Connections -->
+    <div class="col-md-5">
+        <div class="soc-panel h-100">
+            <div class="panel-header">
+                <span class="panel-title"><i class="fas fa-usb text-info mr-2"></i> Currently Connected USB Storage</span>
+            </div>
+            
+            <div class="siem-table-container">
+                <table class="siem-table">
+                    <thead>
+                        <tr>
+                            <th>Device Model</th>
+                            <th>Manufacturer</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usb-drives-body">
+                        <tr>
+                            <td colspan="3" class="text-center text-muted">Scanning for USB disk hardware...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- USB Log history -->
+    <div class="col-md-7">
+        <div class="soc-panel h-100">
+            <div class="panel-header">
+                <span class="panel-title"><i class="fas fa-history text-secondary mr-2"></i> Endpoint Connect History</span>
+                <span class="text-secondary small">Auto-refreshing</span>
+            </div>
+            
+            <div class="siem-table-container">
+                <table class="siem-table sortable">
+                    <thead>
+                        <tr>
+                            <th style="width: 25%;">Timestamp</th>
+                            <th style="width: 35%;">Device Model</th>
+                            <th style="width: 20%;">Vendor</th>
+                            <th style="width: 20%;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usb-events-body">
+                        <tr>
+                            <td colspan="4" class="text-center text-muted">Awaiting connection logs...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
