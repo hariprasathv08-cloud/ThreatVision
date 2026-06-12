@@ -10,6 +10,36 @@ logger = logging.getLogger("CyberSIEM.CorrelationEngine")
 def trigger_alert(severity, source, details, recommended_action, mitre_technique=None):
     db = Database()
     
+    # Centralized alert deduplication/throttling guard to prevent DB bloating and UI lag
+    dedup_query = details
+    if "is using" in details and "CPU" in details:
+        parts = details.split("is using")
+        dedup_query = parts[0] + "is using%"
+    elif "is consuming" in details and "RAM" in details:
+        parts = details.split("is consuming")
+        dedup_query = parts[0] + "is consuming%"
+    elif "overall system CPU spike" in details:
+        dedup_query = "Critical overall system CPU spike:%"
+    elif "overall system RAM consumption" in details:
+        dedup_query = "Critical overall system RAM consumption:%"
+    elif "File Integrity Violation" in details:
+        parts = details.split("Details:")
+        dedup_query = parts[0] + "Details:%"
+    elif "PowerShell Execution Monitored" in details:
+        parts = details.split("Cmdline:")
+        dedup_query = parts[0] + "%"
+
+    # Check if a similar alert from this source was logged in the last 3 minutes
+    three_mins_ago = (datetime.now() - timedelta(minutes=3)).strftime("%Y-%m-%d %H:%M:%S")
+    recent = db.query(
+        "SELECT COUNT(*) as count FROM alerts WHERE source = ? AND details LIKE ? AND timestamp >= ?",
+        (source, dedup_query, three_mins_ago),
+        one=True
+    )
+    if recent and recent["count"] > 0:
+        logger.debug(f"Throttled duplicate alert for source={source}: {details[:80]}...")
+        return
+
     # Heuristic fallback resolution for MITRE technique mapping if not explicitly supplied
     if not mitre_technique:
         details_lower = details.lower()

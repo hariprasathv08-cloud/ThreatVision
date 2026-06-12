@@ -105,8 +105,8 @@ class ProcessMonitorThread(threading.Thread):
                                 mitre_technique="T1059.001 - Command and Scripting Interpreter: PowerShell"
                             )
 
-                # Rule 4: High resource usage detection per process
-                if cpu_percent > 70.0:
+                # Rule 4: High resource usage detection per process (ignoring Idle/System processes)
+                if cpu_percent > 70.0 and pid not in [0, 4] and "idle" not in name_lower:
                     trigger_alert(
                         severity="Medium",
                         source="Process Monitor",
@@ -114,7 +114,7 @@ class ProcessMonitorThread(threading.Thread):
                         recommended_action=f"Inspect if the process is authorized. If it's a runaway thread, terminate the process (PID: {pid}).",
                         mitre_technique="T1496 - Resource Hijacking"
                     )
-                if mem_percent > 20.0: # 20% of total system memory is a lot for one process
+                if mem_percent > 20.0 and pid not in [0, 4] and "idle" not in name_lower: # 20% of total system memory is a lot for one process
                     trigger_alert(
                         severity="Medium",
                         source="Process Monitor",

@@ -294,7 +294,7 @@ def api_alerts():
         query += " AND status = ?"
         params.append(status)
         
-    query += " ORDER BY timestamp DESC"
+    query += " ORDER BY timestamp DESC LIMIT 200"
     
     rows = db.query(query, tuple(params))
     return jsonify([dict(r) for r in rows])
