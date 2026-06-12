@@ -854,9 +854,11 @@ function initEventStream() {
         const alert = JSON.parse(event.data);
         console.log("Real-time Alert:", alert);
 
-        // Show Toast & Play Sound
-        showToastNotification(alert);
-        playAlertSound();
+        // Show Toast & Play Sound (only if not on the alerts page to prevent redundancy)
+        if (window.location.pathname !== "/alerts") {
+            showToastNotification(alert);
+            playAlertSound();
+        }
 
         // Increment Topbar Notification Bell
         const badge = document.getElementById("notification-badge");
